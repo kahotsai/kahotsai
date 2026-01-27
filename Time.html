@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>我的 GitHub Pages 站点 - 显示当前时间</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 50px;
+      background: #f0f4f8;
+    }
+    #current-time {
+      font-size: 3em;
+      font-weight: bold;
+      color: #2c3e50;
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      display: inline-block;
+      min-width: 320px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>欢迎来到 Jin 的页面！</h1>
+  <p>当前东京时间（实时更新）：</p>
+  <div id="current-time">加载中...</div>
+
+  <script>
+    function updateTime() {
+      const now = new Date();  // 获取当前时间（客户端本地时间）
+      
+      // 格式化：年-月-日 时:分:秒（补零）
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      
+      const timeString = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+      
+      document.getElementById('current-time').innerHTML = timeString;
+    }
+
+    // 立即执行一次
+    updateTime();
+    
+    // 每秒更新一次
+    setInterval(updateTime, 1000);
+  </script>
+
+</body>
+</html>
