@@ -1,0 +1,22 @@
+const oracledb = require('oracledb');
+
+async function recordVisit(visitorId) {
+    let connection;
+    try {
+        connection = await oracledb.getConnection(dbConfig);
+        
+        // 使用 MERGE 避免當日重複紀錄導致的報錯
+        const sql = `
+            MERGE INTO access_logs t
+            USING (SELECT :v_id as visitor_id FROM dual) s
+            ON (t.visitor_id = s.visitor_id AND TRUNC(t.access_date) = TRUNC(SYSDATE))
+            WHEN NOT MATCHED THEN
+                INSERT (visitor_id, access_date) VALUES (s.visitor_id, SYSDATE)`;
+
+        await connection.execute(sql, { v_id: visitorId }, { autoCommit: true });
+    } catch (err) {
+        console.error('紀錄訪問失敗:', err);
+    } finally {
+        if (connection) await connection.close();
+    }
+}
