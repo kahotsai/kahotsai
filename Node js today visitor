@@ -1,0 +1,16 @@
+async function getTodayCount() {
+    let connection;
+    try {
+        connection = await oracledb.getConnection(dbConfig);
+        
+        const sql = `
+            SELECT COUNT(DISTINCT visitor_id) AS today_count 
+            FROM access_logs 
+            WHERE TRUNC(access_date) = TRUNC(SYSDATE)`;
+
+        const result = await connection.execute(sql);
+        return result.rows[0][0]; // 返回統計數字
+    } finally {
+        if (connection) await connection.close();
+    }
+}
