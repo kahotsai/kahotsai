@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>訪問統計示例</title>
+</head>
+<body>
+    <h1>歡迎來到我的網站</h1>
+    
+    <div id="stats-container">
+        今日訪問人數：<span id="visitor-count">載入中...</span>
+    </div>
+
+    <script>
+        // 當頁面加載完成後執行
+        window.onload = async () => {
+            try {
+                // 1. 調用後端接口紀錄並獲取人數
+                // 這裡假設你的 Node.js 路由是 /api/visit
+                const response = await fetch('/api/visit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    // 2. 更新 DOM 顯示人數
+                    document.getElementById('visitor-count').innerText = data.count;
+                }
+            } catch (error) {
+                console.error('無法獲取訪問統計:', error);
+                document.getElementById('visitor-count').innerText = '暫無數據';
+            }
+        };
+    </script>
+</body>
+</html>
